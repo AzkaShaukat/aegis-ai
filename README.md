@@ -1,5 +1,4 @@
-# Aegis AI
-## ایجس اے آئی - Unified Cybersecurity Platform
+# Aegis AI  (ایجس اے آئی)   
 
 A secure, multi-channel cybersecurity system for Pakistan that provides real-time threat detection for links, deepfakes, credentials, and QR codes through WhatsApp and Web interfaces.
 
@@ -56,7 +55,6 @@ Aegis AI serves as a powerful automated security assistant designed to protect n
 
 3. **Download AI Model Weights (Important)**
    Because the trained AI models are very large, they are not hosted on GitHub.
-   - Download the model weights from **[Insert Google Drive Link Here]**.
    - Place the downloaded `.pth` files directly into the `deepfake-api/app/models/` directory.
 
 4. **Start the Infrastructure (Docker)**
@@ -154,17 +152,14 @@ Aegis AI/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🏛️ Acknowledgements
 
-Developed as a Final Year Project at Lahore Garrison University by Azka Shaukat and Laiba Naeem under the supervision of Ma'am Kiran Amjad.
+Developed as a Final Year Project at Lahore Garrison University by Azka Shaukat.
 
 ## 📞 Support
 
-For technical support or questions, please contact the development team or create an issue in the repository.
+For technical support or questions, please create an issue in the repository.
 
 ---
 
