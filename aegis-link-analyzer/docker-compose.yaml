@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  link-analyzer:
+    build: .
+    container_name: aegis_link_analyzer
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/code/app
+      - aegis_feedback_data:/code/app/data
+      - aegis_ml_models:/code/app/ml
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - FEEDBACK_DB_PATH=/code/app/data/feedback.db
+      - ML_MODEL_PATH=/code/app/ml/model.pkl
+
+  redis:
+    image: redis:alpine
+    container_name: aegis_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - aegis_redis_data:/data
+
+volumes:
+  aegis_feedback_data:
+  aegis_ml_models:
+  aegis_redis_data:

@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  aegis_t1:
+    build: .
+    container_name: credential-leak-monitor
+    ports:
+      - "8002:8002"
+    env_file: .env
+    depends_on:
+      - redis_t1
+    restart: unless-stopped
+
+  redis_t1:
+    image: redis:7-alpine
+    container_name: aegis_t1_redis
+    restart: unless-stopped

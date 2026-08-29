@@ -1,0 +1,17 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.6.0
+requests==2.31.0
+httpx==0.27.0
+python-dotenv==1.0.1
+redis==5.0.1
+fastapi-limiter==0.1.6
+pinecone-client==3.1.0
+loguru==0.7.2
+python-whois==0.9.5
+dnspython==2.6.1
+aiosqlite==0.20.0
+
+# Phase 4 — ML inference
+scikit-learn==1.4.2
+numpy==1.26.4

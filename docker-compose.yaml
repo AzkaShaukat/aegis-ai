@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # --- Service A: Link Analyzer (The Brain) ---
+  link-analyzer:
+    build: ./aegis-link-analyzer
+    container_name: aegis_link_analyzer
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./aegis-link-analyzer/app:/code/app
+    env_file:
+      - ./aegis-link-analyzer/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+
+  # --- Service B: QR Scanner (The Eyes - NEW) ---
+  qr-scanner:
+    build: ./aegis-qr-scanner
+    container_name: aegis_qr_scanner
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./aegis-qr-scanner/app:/code/app
+    # Note: We don't have a .env file for this one yet, which is fine for Phase 1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - link-analyzer # Needs the brain to be alive
+      - redis
+
+  # --- Shared Database ---
+  redis:
+    image: redis:alpine
+    container_name: aegis_redis
+    ports:
+      - "6379:6379"

@@ -1,0 +1,74 @@
+"""app/api/chat.py — WebSocket + REST endpoints."""
+from __future__ import annotations
+import base64, json, logging, uuid
+import httpx
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.database import get_db, AsyncSessionLocal
+from app.core.security import decode_token
+from app.models.chat import MessageRole
+from app.schemas.chat import SessionDetail, SessionRename, SessionSummary
+from app.schemas.scan import ScanHistoryResponse, ScanStats
+from app.services import chat_service
+from app.services.web_orchestrator import handle_web_message
+
+logger = logging.getLogger(__name__)
+router = APIRouter(tags=["websocket"])
+
+# ── Service URLs ──────────────────────────────────────────────
+_QR_URL       = "http://localhost:8001/scan-base64"
+_DEEPFAKE_URL = "http://localhost:8004/analyze-base64"
+_DEEPFAKE_ALT = "http://localhost:8004/analyze"          # alternate endpoint
+_TIMEOUT      = httpx.Timeout(30.0, connect=3.0)         # 3s connect, 30s read
+
+
+async def _safe_send(ws: WebSocket, data: dict) -> bool:
+    try:
+        await ws.send_text(json.dumps(data, default=str))
+        return True
+    except Exception:
+        return False
+
+
+async def _call_qr(b64: str) -> dict | None:
+    """Call QR scanner microservice. Returns result dict or None."""
+    try:
+        async with httpx.AsyncClient(timeout=_TIMEOUT) as c:
+            r = await c.post(_QR_URL, json={"image_base64": b64})
+            if r.status_code == 200:
+                return r.json()
+    except httpx.ConnectError:
+        logger.debug("QR service not running (port 8001)")
+    except Exception as e:
+        logger.debug("QR error: %s", e)
+    return None
+
+
+async def _call_deepfake(file_bytes: bytes) -> dict | None:
+    """Call deepfake API: POST /analyze/image (multipart file upload)."""
+    try:
+        async with httpx.AsyncClient(timeout=_TIMEOUT) as c:
+            r = await c.post(
+                "http://localhost:8004/analyze/image",
+                files={"file": ("image.jpg", file_bytes, "image/jpeg")},
+            )
+            if r.status_code == 200:
+                d = r.json()
+                logger.info("✅ Deepfake verdict=%s risk=%s prob=%.0f%%",
+                    d.get("verdict","?"), d.get("overall_risk_level","?"),
+                    float(d.get("ensemble_probability", d.get("confidence",0)))*100)
+                return d
+            logger.warning("Deepfake /analyze/image: HTTP %d — %s", r.status_code, r.text[:100])
+    except httpx.ConnectError:
+        logger.debug("Deepfake service not running (port 8004)")
+    except Exception as exc:
+        logger.error("Deepfake /analyze/image error: %s | type: %s", exc, type(exc).__name__)
+    return None
+
+
+async def _handle_media(media_id: str, ws: WebSocket, sid: str, bot_id: str) -> dict:
+    """Analyse uploaded image/video. Reads file from disk directly."""
+    import pathlib
+
+    # Find the uploaded file on disk
+    file_by

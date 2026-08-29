@@ -1,0 +1,30 @@
+# ─────────────────────────────────────────────
+# Aegis Link Analyzer — .env
+# Phase 3
+# ─────────────────────────────────────────────
+
+# ── Existing (Phases 1 + 2) ──────────────────
+VT_API_KEY=your_virustotal_key_here
+URLSCAN_API_KEY=your_urlscan_key_here
+PINECONE_API_KEY=your_pinecone_key_here
+PINECONE_INDEX=your_index_name_here
+OLLAMA_HOST=http://host.docker.internal:11434
+OLLAMA_MODEL=nomic-embed-text
+GSB_API_KEY=your_google_safe_browsing_key_here
+
+# ── Phase 2 Fix: URLhaus API Key ─────────────
+# abuse.ch migrated their platform — now requires a free key
+# Steps:
+#   1. Register free at: https://abuse.ch/
+#   2. After login → https://auth.abuse.ch/
+#   3. Copy API key
+#   4. Paste below
+URLHAUS_API_KEY=your_urlhaus_key_here
+
+# ── Phase 2: PhishTank REMOVED ───────────────
+# PhishTank registration is disabled (Cisco Talos decision)
+# Replaced by OpenPhish — no key needed, works automatically
+
+# ── Phase 3: Feedback DB path ────────────────
+# Set automatically by docker-compose.yaml
+# FEEDBACK_DB_PATH=/code/app/data/feedback.db

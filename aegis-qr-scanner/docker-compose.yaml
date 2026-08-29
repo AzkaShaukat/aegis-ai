@@ -1,0 +1,46 @@
+version: '3.8'
+
+# ══════════════════════════════════════════════════════════════
+# Aegis QR Scanner — Phase 3 docker-compose.yaml
+#
+# Services:
+#   aegis_qr_scanner — FastAPI app (port 8001)
+#   redis            — Redis cache (port 6380 → maps to 6379 in container)
+#
+# Phase 3 external APIs are all called from inside the container
+# via httpx. No new services required — API keys go in .env.
+# ══════════════════════════════════════════════════════════════
+
+services:
+  aegis_qr_scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aegis_qr_scanner_standalone
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./app:/code/app
+      - aegis_qr_blacklist:/code/app/data    # Persists blacklist.db across rebuilds
+    env_file:
+      - .env                                  # All keys loaded here — see .env.example
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Allows container to reach Link Analyzer on host
+    depends_on:
+      - redis
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: aegis_qr_redis
+    ports:
+      - "6380:6379"                           # Host 6380 to avoid clash with Link Analyzer Redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - aegis_qr_redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  aegis_qr_blacklist:
+  aegis_qr_redis_data:

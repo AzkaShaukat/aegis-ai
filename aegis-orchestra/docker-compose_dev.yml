@@ -1,0 +1,47 @@
+version: "3.9"
+
+# ============================================================
+# Orchestra-only dev compose
+#
+# NETWORKING STRATEGY (fixes credential/profile/qr unreachable):
+# We try BOTH host.docker.internal AND container-name approaches.
+# The environment variables in .env are overridden at runtime.
+#
+# If modules still unreachable, run:
+#   Windows: .\fix_docker_network.ps1
+#   Linux:   ./fix_docker_network.sh
+# ============================================================
+
+services:
+  orchestra:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aegis-orchestra-dev
+    ports:
+      - "8006:8006"
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://host.docker.internal:6379/2
+      - CELERY_BROKER_URL=redis://host.docker.internal:6379/3
+      - CELERY_RESULT_BACKEND=redis://host.docker.internal:6379/3
+      - LINK_ANALYZER_URL=http://host.docker.internal:8000
+      - QR_SCANNER_URL=http://host.docker.internal:8001
+      - CREDENTIAL_ANALYZER_URL=http://host.docker.internal:8002
+      - PROFILE_ANALYZER_URL=http://host.docker.internal:8003
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_MODEL=llama3.2:latest
+      - OLLAMA_ENABLED=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Connect to ALL existing aegis module networks so container-name routing works too
+    networks:
+      - default
+    volumes:
+      - ./app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8006 --reload --log-level info
+
+networks:
+  default:
+    driver: bridge

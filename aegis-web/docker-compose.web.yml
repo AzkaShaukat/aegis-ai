@@ -1,0 +1,61 @@
+version: "3.9"
+# ============================================================
+# Aegis AI — Web Stack (Development)
+# ============================================================
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: aegis-postgres
+    environment:
+      POSTGRES_DB: aegis_web
+      POSTGRES_USER: aegis
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aegispass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - aegis_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aegis -d aegis_web"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis-web:
+    image: redis:7-alpine
+    container_name: aegis-redis-web
+    ports:
+      - "6380:6379"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aegis-web
+    ports:
+      - "8007:8007"
+    env_file:
+      - .env.web
+    environment:
+      DATABASE_URL: postgresql+asyncpg://aegis:${POSTGRES_PASSWORD:-aegispass}@postgres:5432/aegis_web
+      REDIS_URL: redis://redis-web:6379/0
+      REDIS_RATE_LIMIT_URL: redis://redis-web:6379/1
+      LINK_ANALYZER_URL: http://host.docker.internal:8000
+      QR_SCANNER_URL: http://host.docker.internal:8001
+      CREDENTIAL_ANALYZER_URL: http://host.docker.internal:8002
+      PROFILE_ANALYZER_URL: http://host.docker.internal:8003
+      DEEPFAKE_SERVICE_URL: http://host.docker.internal:8004
+      OLLAMA_HOST: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-web:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  aegis_postgres_data:

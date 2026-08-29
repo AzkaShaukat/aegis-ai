@@ -1,0 +1,38 @@
+# ══════════════════════════════════════════════════════════════
+# Aegis QR Scanner — Phase 3 requirements.txt
+# No new packages required for Phase 3!
+# All Phase 3 external APIs are called via httpx (already present).
+# ══════════════════════════════════════════════════════════════
+
+# ─── Web Framework ───────────────────────────────────────────
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.9
+
+# ─── Image Processing ────────────────────────────────────────
+pillow==10.2.0
+numpy==1.26.3
+opencv-python-headless==4.9.0.80
+
+# ─── QR Decoding ─────────────────────────────────────────────
+pyzbar==0.1.9
+
+# ─── HTTP Client (Link Analyzer + all Phase 3 external APIs) ─
+httpx==0.27.0
+
+# ─── Database (blacklist.db SQLite) ──────────────────────────
+# sqlite3 is built into Python — no install needed
+
+# ─── Redis (telemetry + QR payload cache + URL scan cache) ───
+redis==5.0.1
+
+# ─── Utilities ───────────────────────────────────────────────
+python-dotenv==1.0.1
+loguru==0.7.2
+
+# ─── Phase 2 (visual fingerprinting pHash) ───────────────────
+scipy==1.12.0
+
+# ─── NOT needed until Phase 4 ────────────────────────────────
+# qrcode[pil]==7.4.2       # QR code GENERATION (Phase 4.6)
+# scikit-learn==1.4.0      # Local ML classifier (Phase 4 / ML)

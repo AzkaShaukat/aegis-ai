@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: aegis_deepfake_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - aegis_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  deepfake-api:
+    build: .
+    container_name: aegis_deepfake_api
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./app/models:/app/app/models:ro
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - REDIS_URL=redis://aegis_deepfake_redis:6379/0
+      - MAX_VIDEO_SIZE_MB=99999
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - aegis_net
+
+volumes:
+  redis_data:
+
+networks:
+  aegis_net:
+    driver: bridge
+    name: aegis_network

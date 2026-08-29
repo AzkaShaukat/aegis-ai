@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: aegis_app
+    ports:
+      - "8003:8003"
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Linux Docker bridge
+    volumes:
+      - aegis_models:/app/models              # sklearn model persists
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - aegis_net
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:80003/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: aegis_redise
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - aegis_net
+
+volumes:
+  aegis_models:
+
+networks:
+  aegis_net:
+    driver: bridge

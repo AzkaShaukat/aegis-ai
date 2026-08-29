@@ -1,0 +1,26 @@
+{
+  "strategy": "Stacking GradBoost",
+  "threshold": 0.49000000000000016,
+  "val_auc": 0.9490291921761782,
+  "test_auc": 0.9499001074179247,
+  "test_f1": 0.9614508802145343,
+  "test_acc": 0.9316206019847454,
+  "test_prec": 0.9493579866461223,
+  "test_rec": 0.9738558265328822,
+  "weights": {
+    "spatial": 0.333,
+    "frequency": 0.333,
+    "temporal": 0.333
+  },
+  "model_paths": {
+    "spatial": "/content/drive/MyDrive/Deepfake-video/models/spatial/best_model.pth",
+    "frequency": "/content/drive/MyDrive/Deepfake-video/models/frequency/best_model.pth",
+    "temporal": "/content/drive/MyDrive/Deepfake-video/models/temporal/best_model.pth"
+  },
+  "individual_test_auc": {
+    "spatial": 0.9393752427592386,
+    "frequency": 0.8457545547194082,
+    "temporal": 0.5
+  },
+  "created": "2026-04-05T11:23:12.918124"
+}

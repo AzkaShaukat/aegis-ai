@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Aegis Tier 1 — Setup & Guidance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0F172A;color:#E2E8F0;line-height:1.7;font-size:15px}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px}
+.cover{background:linear-gradient(135deg,#1565C0,#0288D1);padding:40px;border-radius:16px;margin-bottom:32px;text-align:center}
+.cover h1{font-size:30px;font-weight:800;color:#fff;margin-bottom:8px}
+.cover p{color:rgba(255,255,255,.8);font-size:16px}
+.badge{display:inline-block;background:rgba(255,255,255,.15);padding:4px 14px;border-radius:20px;font-size:13px;color:#fff;margin:4px}
+h2{font-size:20px;font-weight:700;color:#60A5FA;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid #1E293B}
+h3{font-size:16px;font-weight:600;color:#93C5FD;margin:20px 0 8px}
+p,li{color:#CBD5E1;margin-bottom:8px}
+ul,ol{padding-left:24px;margin-bottom:12px}
+li{margin-bottom:6px}
+.step{background:#1E293B;border-radius:10px;padding:20px 24px;margin-bottom:16px;border-left:4px solid #3B82F6}
+.step-num{display:inline-block;background:#3B82F6;color:#fff;width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-weight:700;font-size:13px;margin-right:10px;flex-shrink:0}
+.step-title{font-weight:700;color:#E2E8F0;font-size:16px}
+pre,code{background:#0D1B2A;color:#86EFAC;padding:12px 16px;border-radius:8px;font-family:'Consolas',monospace;font-size:13px;overflow-x:auto;display:block;margin:10px 0;white-space:pre}
+code.inline{display:inline;padding:2px 8px;font-size:13px;background:#1E293B;color:#7DD3FC;border-radius:4px}
+.note{background:#1E3A5F;border:1px solid #3B82F6;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;color:#BAE6FD}
+.warn{background:#3B1F07;border:1px solid #F97316;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;color:#FED7AA}
+.success{background:#052E16;border:1px solid #22C55E;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;color:#BBF7D0}
+table{width:100%;border-collapse:collapse;margin:12px 0;background:#1E293B;border-radius:8px;overflow:hidden}
+th{background:#1565C0;color:#fff;padding:10px 14px;text-align:left;font-size:13px}
+td{padding:8px 14px;border-bottom:1px solid #334155;font-size:13px;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#253146}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0}
+.feature-card{background:#1E293B;border-radius:8px;padding:14px;border-top:3px solid #3B82F6}
+.feature-card h4{color:#60A5FA;font-size:13px;font-weight:700;margin-bottom:6px}
+.feature-card p{font-size:12px;color:#94A3B8;margin:0}
+.endpoint{display:flex;align-items:center;gap:10px;background:#0D1B2A;padding:10px 14px;border-radius:8px;margin:6px 0}
+.method{background:#3B82F6;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;font-family:monospace;flex-shrink:0}
+.path{color:#7DD3FC;font-family:monospace;font-size:13px}
+.desc{color:#94A3B8;font-size:12px;margin-left:auto}
+@media(max-width:600px){.feature-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <h1>⚡ Aegis AI — Tier 1 Credential Analyzer</h1>
+  <p>Complete Setup & Guidance — From Zero to Running in 5 Minutes</p>
+  <div style="margin-top:16px">
+    <span class="badge">Port 8003</span>
+    <span class="badge">Python 3.12</span>
+    <span class="badge">FastAPI</span>
+    <span class="badge">Docker</span>
+    <span class="badge">28 Email Tests</span>
+    <span class="badge">32 Password Tests</span>
+    <span class="badge">22 Username Tests</span>
+  </div>
+</div>
+
+<!-- WHAT IS THIS -->
+<h2>What Is This?</h2>
+<p>This is a <strong>brand new</strong> Tier 1 credential analyzer written completely from scratch. It replaces nothing from the old v4 CLM — that still runs on port 8002. This runs on <strong>port 8003</strong>.</p>
+<p>It implements every single feature from the Tier 1 checklist in the most accurate way possible:</p>
+<div class="feature-grid">
+  <div class="feature-card"><h4>📧 Email — 9 Features</h4><p>Syntax · Normalization · Homoglyphs · Disposable (600+ domains) · MX DNS · HIBP breaches · Paste dumps · EmailRep reputation · WHOIS domain age</p></div>
+  <div class="feature-card"><h4>🔑 Password — 12 Features</h4><p>HIBP k-anonymity · Entropy · zxcvbn crack time · Common list · Keyboard walk · Repeating · Date patterns · Dictionary · Urdu Roman · Leetspeak · NIST policy · Similarity check</p></div>
+  <div class="feature-card"><h4>👤 Username — 7 Features</h4><p>Brand impersonation (100+ brands) · Bot entropy · Numeric suffix patterns · Lookalike chars · Suspicious keywords · DeHashed breach history · Cross-platform presence</p></div>
+</div>
+
+<!-- PREREQUISITES -->
+<h2>Step 1 — Prerequisites</h2>
+<div class="step">
+  <span class="step-num">1</span><span class="step-title">Install Docker Desktop</span>
+  <p style="margin-top:10px">Download from <strong>docker.com/products/docker-desktop</strong>. Start it. Make sure it's running (whale icon in system tray).</p>
+</div>
+<div class="step">
+  <span class="step-num">2</span><span class="step-title">Install Python 3.10+ (for running tests only)</span>
+  <p style="margin-top:10px">Download from <strong>python.org</strong>. During install tick <em>"Add Python to PATH"</em>. Verify:</p>
+  <pre>python --version</pre>
+</div>
+<div class="step">
+  <span class="step-num">3</span><span class="step-title">Install test dependencies</span>
+  <pre>pip install httpx colorama</pre>
+</div>
+
+<!-- FILE SETUP -->
+<h2>Step 2 — Project Files</h2>
+<p>Extract the project ZIP. Your folder structure should look exactly like this:</p>
+<pre>D:\Aegis AI\tier1-analyzer\
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env                     ← you create this (copy from .env.example)
+├── .env.example
+├── app\
+│   ├── __init__.py
+│   ├── main.py
+│   ├── config.py
+│   ├── redis_client.py
+│   ├── analyzers\
+│   │   ├── __init__.py
+│   │   ├── email.py
+│   │   ├── password.py
+│   │   └── username.py
+│   └── data\
+│       ├── __init__.py
+│       ├── disposable_domains.py
+│       └── password_data.py
+└── tests\
+    ├── __init__.py
+    └── test_tier1.py</pre>
+
+<div class="step">
+  <span class="step-num">1</span><span class="step-title">Create your .env file</span>
+  <p style="margin-top:10px">Copy <code class="inline">.env.example</code> to <code class="inline">.env</code>:</p>
+  <pre>copy .env.example .env
+notepad .env</pre>
+  <p>The only API key you <em>need</em> for full functionality is HIBP. All others are optional:</p>
+</div>
+
+<table>
+  <tr><th>Key</th><th>What it unlocks</th><th>Cost</th><th>Get it at</th></tr>
+  <tr><td>HIBP_API_KEY</td><td>Email breach history (which breaches, dates, data types)</td><td>$3.50/mo</td><td>haveibeenpwned.com/API/Key</td></tr>
+  <tr><td>DEHASHED_EMAIL + KEY</td><td>Username breach search</td><td>Free account</td><td>dehashed.com</td></tr>
+  <tr><td>WHOISXML_API_KEY</td><td>More accurate domain age data</td><td>Free tier</td><td>whoisxmlapi.com</td></tr>
+  <tr><td><em>(none)</em></td><td>Everything except above — HIBP passwords, disposable check, MX, pastes, EmailRep, entropy, zxcvbn all work FREE</td><td>Free</td><td>—</td></tr>
+</table>
+
+<!-- BUILD AND RUN -->
+<h2>Step 3 — Build and Start</h2>
+<div class="step">
+  <span class="step-num">1</span><span class="step-title">Open PowerShell in your project folder</span>
+  <pre>cd "D:\Aegis AI\tier1-analyzer"</pre>
+</div>
+<div class="step">
+  <span class="step-num">2</span><span class="step-title">Build and start Docker containers</span>
+  <pre>docker-compose up --build</pre>
+  <p style="margin-top:8px">This will take 2–4 minutes the first time (downloading Python base image and installing packages). After that it's fast.</p>
+</div>
+<div class="step">
+  <span class="step-num">3</span><span class="step-title">Watch for the success message</span>
+  <pre>✓ Aegis Tier-1 Analyzer ready on http://0.0.0.0:8003</pre>
+  <div class="success">When you see this line, the API is running. Do not close this terminal.</div>
+</div>
+<div class="step">
+  <span class="step-num">4</span><span class="step-title">Verify it's working — open a NEW PowerShell window</span>
+  <pre>curl http://localhost:8003/health</pre>
+  <p>Expected response:</p>
+  <pre>{"status":"healthy","version":"1.0.0","redis":"healthy","endpoints":[...]}</pre>
+</div>
+<div class="step">
+  <span class="step-num">5</span><span class="step-title">Open Swagger UI in your browser</span>
+  <pre>http://localhost:8003/docs</pre>
+  <p>This shows all endpoints with interactive testing. You can try every feature here without writing any code.</p>
+</div>
+
+<!-- ENDPOINTS -->
+<h2>All Endpoints</h2>
+<div class="endpoint"><span class="method">GET</span><span class="path">/health</span><span class="desc">System health check</span></div>
+<div class="endpoint"><span class="method">POST</span><span class="path">/analyze/email</span><span class="desc">Full email analysis — all 9 features</span></div>
+<div class="endpoint"><span class="method">POST</span><span class="path">/analyze/password</span><span class="desc">Full password analysis — all 12 features</span></div>
+<div class="endpoint"><span class="method">POST</span><span class="path">/analyze/username</span><span class="desc">Full username analysis — all 7 features</span></div>
+<div class="endpoint"><span class="method">GET</span><span class="path">/analyze/email/{email}</span><span class="desc">Quick email scan via URL</span></div>
+<div class="endpoint"><span class="method">GET</span><span class="path">/analyze/username/{username}</span><span class="desc">Quick username scan via URL</span></div>
+
+<!-- MANUAL TESTING -->
+<h2>Step 4 — Manual Testing (via curl)</h2>
+<h3>Email scan</h3>
+<pre>curl -X POST http://localhost:8003/analyze/email \
+  -H "Content-Type: application/json" \
+  -d "{\"value\": \"attacker@mailinator.com\"}"</pre>
+
+<h3>Password scan (privacy-safe)</h3>
+<pre>curl -X POST http://localhost:8003/analyze/password \
+  -H "Content-Type: application/json" \
+  -d "{\"value\": \"password\"}"</pre>
+
+<h3>Password + similarity check</h3>
+<pre>curl -X POST http://localhost:8003/analyze/password \
+  -H "Content-Type: application/json" \
+  -d "{\"value\": \"ahmed2024\", \"email\": \"ahmed2024@gmail.com\", \"username\": \"ahmed2024\"}"</pre>
+
+<h3>Username scan</h3>
+<pre>curl -X POST http://localhost:8003/analyze/username \
+  -H "Content-Type: application/json" \
+  -d "{\"value\": \"paypal_support99\"}"</pre>
+
+<h3>Quick GET (browser-friendly)</h3>
+<pre>http://localhost:8003/analyze/email/test@mailinator.com
+http://localhost:8003/analyze/username/paypal_support99</pre>
+
+<!-- AUTOMATED TESTS -->
+<h2>Step 5 — Running Automated Tests</h2>
+<p>The test suite sends <strong>82 real HTTP requests</strong> to the running API and verifies every field of every response against expected values. This is exactly like manual testing — just automated.</p>
+<div class="note">Make sure Docker containers are still running in the other terminal before running tests.</div>
+
+<div class="step">
+  <span class="step-num">1</span><span class="step-title">Navigate to the tests folder</span>
+  <pre>cd "D:\Aegis AI\tier1-analyzer\tests"</pre>
+</div>
+<div class="step">
+  <span class="step-num">2</span><span class="step-title">Run ALL tests</span>
+  <pre>python test_tier1.py</pre>
+</div>
+<div class="step">
+  <span class="step-num">3</span><span class="step-title">Run only one category</span>
+  <pre>python test_tier1.py --email        # 28 email tests only
+python test_tier1.py --password     # 32 password tests only
+python test_tier1.py --username     # 22 username tests only</pre>
+</div>
+<div class="step">
+  <span class="step-num">4</span><span class="step-title">See the full response on failure</span>
+  <pre>python test_tier1.py --verbose</pre>
+</div>
+
+<h3>Understanding Test Output</h3>
+<table>
+  <tr><th>Symbol</th><th>Meaning</th></tr>
+  <tr><td style="color:#22C55E">PASS</td><td>Test sent request, got response, all assertions verified ✓</td></tr>
+  <tr><td style="color:#EF4444">FAIL</td><td>One or more assertions didn't match — check the ✗ lines below it</td></tr>
+  <tr><td style="color:#F59E0B">SKIP</td><td>Test skipped — usually because an API key isn't configured</td></tr>
+</table>
+
+<h3>Expected Pass Rate by Configuration</h3>
+<table>
+  <tr><th>Configuration</th><th>Expected Pass Rate</th><th>What's skipped</th></tr>
+  <tr><td>No API keys at all</td><td>~80%</td><td>HIBP email, DeHashed username</td></tr>
+  <tr><td>HIBP key added</td><td>~90%</td><td>DeHashed only</td></tr>
+  <tr><td>HIBP + DeHashed</td><td>~97%</td><td>Nothing important</td></tr>
+  <tr><td>All keys + fast internet</td><td>100%</td><td>None</td></tr>
+</table>
+
+<!-- TROUBLESHOOTING -->
+<h2>Troubleshooting</h2>
+<table>
+  <tr><th>Problem</th><th>Solution</th></tr>
+  <tr><td>Cannot connect to localhost:8003</td><td>Docker containers not started. Run <code class="inline">docker-compose up</code> in the project folder.</td></tr>
+  <tr><td>Port 8003 already in use</td><td>Change <code class="inline">8003:8003</code> in docker-compose.yml to <code class="inline">8004:8003</code> and update BASE in test file.</td></tr>
+  <tr><td>ModuleNotFoundError on startup</td><td>Check docker-compose.yml has NO <code class="inline">volumes:</code> block — that overrides the built image.</td></tr>
+  <tr><td>HIBP tests failing with "HIBP_API_KEY not configured"</td><td>Add your key to <code class="inline">.env</code> then rebuild: <code class="inline">docker-compose up --build</code></td></tr>
+  <tr><td>MX check slow (&gt;5s)</td><td>Normal — DNS resolution can be slow. Redis caches it after first call.</td></tr>
+  <tr><td>zxcvbn ImportError</td><td>Rebuild Docker: <code class="inline">docker-compose build --no-cache</code></td></tr>
+  <tr><td>Redis shows "unavailable"</td><td>System still works — Redis only caches external API calls. Check redis_t1 container started.</td></tr>
+</table>
+
+<!-- STOPPING -->
+<h2>Starting / Stopping</h2>
+<pre># Start (foreground — see logs)
+docker-compose up
+
+# Start (background)
+docker-compose up -d
+
+# Stop
+docker-compose down
+
+# Rebuild after code changes
+docker-compose up --build
+
+# Full clean rebuild
+docker-compose down
+docker-compose build --no-cache
+docker-compose up</pre>
+
+<div class="warn">
+  <strong>⚠ After any code change</strong> you must rebuild the Docker image for changes to take effect:<br>
+  <code class="inline">docker-compose up --build</code>
+</div>
+
+<!-- WHAT HAPPENS INSIDE -->
+<h2>What Happens When You Scan an Email</h2>
+<p>Here is the exact sequence of operations when you POST to <code class="inline">/analyze/email</code>:</p>
+<ol>
+  <li><strong>Syntax check</strong> — validates RFC 5322 format, catches missing @, consecutive dots, etc.</li>
+  <li><strong>Normalization</strong> — strips Gmail dots, removes +tags, lowercases, NFKC Unicode normalize</li>
+  <li><strong>Homoglyph scan</strong> — checks every character against Cyrillic/Greek lookalike map</li>
+  <li><strong>Disposable check</strong> — looks domain up in the 600+ domain list (in-memory, instant)</li>
+  <li><strong>Async fan-out</strong> — the following 5 checks run <em>concurrently at the same time</em>:
+    <ul>
+      <li>MX DNS lookup — does this domain actually receive email?</li>
+      <li>HIBP API — breach history (cached 24h in Redis after first call)</li>
+      <li>psbdmp.ws — paste site search (cached 1h)</li>
+      <li>EmailRep.io — reputation score (cached 2h)</li>
+      <li>WHOIS — domain registration age (cached 24h)</li>
+    </ul>
+  </li>
+  <li><strong>Score aggregation</strong> — all signals combined into 0–100 risk score</li>
+  <li><strong>Response returned</strong> — full JSON with every sub-result and flag list</li>
+</ol>
+<p>Because steps 5a–5e run in parallel, the total response time is limited by the slowest external API — not the sum of all five.</p>
+
+<div style="text-align:center;margin-top:48px;padding-top:24px;border-top:1px solid #1E293B;color:#475569;font-size:13px">
+  Aegis AI — Tier 1 Credential Analyzer · v1.0.0 · Lahore Garrison University FYP
+</div>
+</div>
+</body>
+</html>
